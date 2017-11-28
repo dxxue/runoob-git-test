@@ -24,7 +24,7 @@ import cn.sowell.zhsq.urp.urp.pojo.Unit;
 import cn.sowell.zhsq.urp.workbench.Constant;
 import cn.sowell.zhsq.urp.workbench.pojo.Certificate;
 import cn.sowell.zhsq.urp.workbench.pojo.CertificateFJ;
-123213
+
 public class CertificateService extends BaseService implements Constant, Constants{
 	
 	private static final Log logger = Debuger.getDebuger(AccountBookService.class);
@@ -32,9 +32,9 @@ public class CertificateService extends BaseService implements Constant, Constan
 	private CredentialsModuleService credentialsModuleService;
 
 	/**
-	 * @param criteria Certificate¶ÔÏó
+	 * @param criteria Certificateå¯¹è±¡
 	 * @param user
-	 * @param state Á÷³Ì×´Ì¬
+	 * @param state æµç¨‹çŠ¶æ€
 	 * @return
 	 */
 	public List<Certificate> list(Certificate criteria, Unit user, String state) {
@@ -56,7 +56,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 
 	/**
-	 * ´ı°ìÖ¤¼ş²éÑ¯
+	 * å¾…åŠè¯ä»¶æŸ¥è¯¢
 	 * 
 	 * @param criteria
 	 * @param flowsql
@@ -64,11 +64,11 @@ public class CertificateService extends BaseService implements Constant, Constan
 	 * @return
 	 */
 	public List<Certificate> dlbj_list(Certificate criteria, String flowsql, String userid) {
-		// ¸ù¾İ¹¤×÷Á÷ÕÒ³ö¿ÉÒÔ´¦ÀíµÄÁ÷³Ì
+		// æ ¹æ®å·¥ä½œæµæ‰¾å‡ºå¯ä»¥å¤„ç†çš„æµç¨‹
 		String hql = "select * from (select certificate.* from t_workbench_certificate certificate,"
 				+ flowsql;
 		hql += " ) c  where state != '" + Constant.CERTIFICATE_STATE_END 
-				+"' and state != '" + Constant.CERTIFICATE_STATE_SUBMITTED + "'"; //°üÀ¨½ÖµÀ»ØÍËÖ¤¼ş×´Ì¬Îª c0
+				+"' and state != '" + Constant.CERTIFICATE_STATE_SUBMITTED + "'"; //åŒ…æ‹¬è¡—é“å›é€€è¯ä»¶çŠ¶æ€ä¸º c0
 		if (StringUtils.hasText(criteria.getUserName())) {
 			hql += " and user_name like '%" + criteria.getUserName() + "%'";
 		}
@@ -83,25 +83,25 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 	
 	/**
-	 * ¶½°ìÁĞ±í
+	 * ç£åŠåˆ—è¡¨
 	 * @param criteria
 	 */
 	public List<Certificate> superviseList(Certificate criteria,Unit unit) {
 		String hql = "select c from Certificate c,DealRecord d where d.problemId=c.id"
-				+" and d.operateType = '¶½°ì' and c.operatorId='" + unit.getId() + "'";
+				+" and d.operateType = 'ç£åŠ' and c.operatorId='" + unit.getId() + "'";
 		return getPageList(hql, criteria);
 	}
 	
 	/**
-	 * ÎÒÒªÈ¡Ö¤²éÑ¯
+	 * æˆ‘è¦å–è¯æŸ¥è¯¢
 	 * 
 	 * @param criteria
 	 * @return
 	 */
 	public List<Certificate> receiveDocument(String searchStr, String areaCode) {
-		String paramType = "chinese"; //ÊäÈë¿òÄ¬ÈÏÊäÈë²éÑ¯ÀàĞÍÎª ÖĞÎÄ
+		String paramType = "chinese"; //è¾“å…¥æ¡†é»˜è®¤è¾“å…¥æŸ¥è¯¢ç±»å‹ä¸º ä¸­æ–‡
 		
-		try{ //Èç¹û²éÑ¯²ÎÊı¿ÉÒÔ×ª»¯ÎªÊı×Ö£¬Ôò¸Ä±ä parType Îª ÊıÖµ²éÑ¯
+		try{ //å¦‚æœæŸ¥è¯¢å‚æ•°å¯ä»¥è½¬åŒ–ä¸ºæ•°å­—ï¼Œåˆ™æ”¹å˜ parType ä¸º æ•°å€¼æŸ¥è¯¢
 			Long.parseLong(searchStr);
 			paramType = "number";
 		}catch(Exception e){}
@@ -112,9 +112,9 @@ public class CertificateService extends BaseService implements Constant, Constan
 			hql += " and c.userName like '%" + searchStr + "%'";
 		}
 		if("number".equals(paramType)){
-			if(searchStr.length() == 18){ //Ä¬ÈÏÓÃ»§ÊäÈë18Î»²éÑ¯Êı×ÖÎªÉí·İÖ¤²éÑ¯
+			if(searchStr.length() == 18){ //é»˜è®¤ç”¨æˆ·è¾“å…¥18ä½æŸ¥è¯¢æ•°å­—ä¸ºèº«ä»½è¯æŸ¥è¯¢
 				hql += " and c.applicant.peopleId='" + searchStr+"'";
-			}else{ //ÊÜÀíµ¥ºÅÄ£ºı²éÑ¯
+			}else{ //å—ç†å•å·æ¨¡ç³ŠæŸ¥è¯¢
 				hql += " and c.certificate_no like '%" + searchStr + "%'";
 			}
 		}
@@ -123,7 +123,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 
 	/**
-	 * ÑéÖ¤µ±Ç°½×¶ÎµÄÁ÷³ÌÊÇ·ñÄÜ±»µÇÂ½Õß´¦Àí
+	 * éªŒè¯å½“å‰é˜¶æ®µçš„æµç¨‹æ˜¯å¦èƒ½è¢«ç™»é™†è€…å¤„ç†
 	 * @return
 	 */
 	public Boolean isDealCertificate(String cerid, String flowhql) {
@@ -150,7 +150,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 
 	/**
-	 *  ¸ù¾İÈËÔ±IDºÍÖ¤¼şID²éÑ¯´ËÈËÊÇ·ñ°ìÀí¹ı´ËÖ¤¼ş
+	 *  æ ¹æ®äººå‘˜IDå’Œè¯ä»¶IDæŸ¥è¯¢æ­¤äººæ˜¯å¦åŠç†è¿‡æ­¤è¯ä»¶
 	 * @param peopleId
 	 * @param type_twoid
 	 * @return
@@ -176,27 +176,27 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 	
 	/**
-	 * ×ÛºÏ²éÑ¯
+	 * ç»¼åˆæŸ¥è¯¢
 	 * @author xwq
 	 */
 	public List<Certificate> comprehensiveSearch(Certificate certificate, String parentId, String typeId) {
 		//String hql = " from Certificate c where c.state != '" + Constant.CERTIFICATE_STATE_NEW + "'";
 		String hql = " from Certificate c where 1=1";
-		//ÒÔÏÂÎªÖ¤¼şĞÅÏ¢²éÑ¯
+		//ä»¥ä¸‹ä¸ºè¯ä»¶ä¿¡æ¯æŸ¥è¯¢
 		if (StringUtils.hasText(certificate.getAreaCode())) {
 			hql += " and c.areaCode like '" + certificate.getAreaCode() + "%' ";
 		}
-		/*if ( StringUtils.hasText(finishTime) ) { // °ì½áÈÕÆÚ
+		/*if ( StringUtils.hasText(finishTime) ) { // åŠç»“æ—¥æœŸ
 			long[] time = this.getCurrentDayTime(finishTime);
 			hql += " and c.state = 'z0' and c.operateTime >= " + time[0] + " and c.operateTime <= " + time[1];
 		}*/
-		if(StringUtils.hasText(parentId)){ //°ìÖ¤Ò»¼¶Àà
+		if(StringUtils.hasText(parentId)){ //åŠè¯ä¸€çº§ç±»
 			hql += " and c.credentialsType.parentId = '" + parentId +"'";
 		}
-		if(StringUtils.hasText(typeId)){ //°ìÖ¤¶ş¼¶Àà
+		if(StringUtils.hasText(typeId)){ //åŠè¯äºŒçº§ç±»
 			hql += " and c.credentialsType.id = '" + typeId + "'";
 		}
-		if (StringUtils.hasText(certificate.getCertificate_no())) { //ÊÜÀíµ¥ºÅ
+		if (StringUtils.hasText(certificate.getCertificate_no())) { //å—ç†å•å·
 			hql += " and c.certificate_no like '%" + certificate.getCertificate_no() + "%'";
 		}
 		if(certificate.getState() != null && "b0".equals(certificate.getState())) {
@@ -206,29 +206,29 @@ public class CertificateService extends BaseService implements Constant, Constan
 		} else if (StringUtils.hasText(certificate.getState())) {
 			hql += "and c.state = '" + certificate.getState() + "'";
 		}
-		// ÒÔÏÂÎªÈËÔ±ĞÅÏ¢²éÑ¯
-		if(StringUtils.hasText(certificate.getApplicant().getName())){ //ĞÕÃû
+		// ä»¥ä¸‹ä¸ºäººå‘˜ä¿¡æ¯æŸ¥è¯¢
+		if(StringUtils.hasText(certificate.getApplicant().getName())){ //å§“å
 			hql += " and c.applicant.name like '%" + certificate.getApplicant().getName() + "%'";
 		}
-		if(StringUtils.hasText(certificate.getApplicant().getPeopleId())){ //Éí·İÖ¤ºÅÂë
+		if(StringUtils.hasText(certificate.getApplicant().getPeopleId())){ //èº«ä»½è¯å·ç 
 			hql += " and c.applicant.peopleId like '%" + certificate.getApplicant().getPeopleId() + "%'";
 		}
-		if(StringUtils.hasText(certificate.getApplicant().getContactNumber())){ //ÁªÏµºÅÂë
+		if(StringUtils.hasText(certificate.getApplicant().getContactNumber())){ //è”ç³»å·ç 
 			hql += " and c.applicant.contactNumber like '%" + certificate.getApplicant().getContactNumber() + "%'";
 		}
 		if( ! StringUtils.hasText(certificate.getOrderBy()) ) {
-			hql += " order by c.operateTime desc"; // Ä¬ÈÏÅÅĞò
+			hql += " order by c.operateTime desc"; // é»˜è®¤æ’åº
 	    }
 		return getPageList(hql, certificate);
 	}
 	
 	
 	/**
-	 * ²éÕÒµ½Ä³Ò»¸½¼şÀàĞÍ¶ÔÓ¦µÄ¸½¼şÁĞ±í 
-	 * @param busId ÒµÎñId
-	 * @param typeId Ò»¼¶ÀàId
-	 * @param subTypeId ¸½¼şÀàĞÍId
-	 * @return ¸½¼şpath,¸ñÊ½,´óĞ¡,±¸×¢,¸½¼ş±íid,ÖĞ¼ä±íId£¬¸½¼şÃû
+	 * æŸ¥æ‰¾åˆ°æŸä¸€é™„ä»¶ç±»å‹å¯¹åº”çš„é™„ä»¶åˆ—è¡¨ 
+	 * @param busId ä¸šåŠ¡Id
+	 * @param typeId ä¸€çº§ç±»Id
+	 * @param subTypeId é™„ä»¶ç±»å‹Id
+	 * @return é™„ä»¶path,æ ¼å¼,å¤§å°,å¤‡æ³¨,é™„ä»¶è¡¨id,ä¸­é—´è¡¨Idï¼Œé™„ä»¶å
 	 */
 	public List findAccessoryList(String busId ,String typeId ,String subTypeId){
 		String sql = "select a.path,a.ext,a.sizes,a.remarks,a.id as accessory_id,f.id as fj_id,a.name,f.c_accessory_name"
@@ -241,11 +241,11 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 	
 	/**
-	 * ²éÕÒµ½È«²¿µÄ¸½¼şÁĞ±í 
-	 * @param busId ÒµÎñId
-	 * @param typeId Ò»¼¶ÀàId
-	 * @param subTypeId ¸½¼şÀàĞÍId
-	 * @return ¸½¼şpath,¸ñÊ½,´óĞ¡,±¸×¢,¸½¼ş±íid,ÖĞ¼ä±íId£¬¸½¼şÃû, ¸½¼şÃû(²»´øÊı×Ö)
+	 * æŸ¥æ‰¾åˆ°å…¨éƒ¨çš„é™„ä»¶åˆ—è¡¨ 
+	 * @param busId ä¸šåŠ¡Id
+	 * @param typeId ä¸€çº§ç±»Id
+	 * @param subTypeId é™„ä»¶ç±»å‹Id
+	 * @return é™„ä»¶path,æ ¼å¼,å¤§å°,å¤‡æ³¨,é™„ä»¶è¡¨id,ä¸­é—´è¡¨Idï¼Œé™„ä»¶å, é™„ä»¶å(ä¸å¸¦æ•°å­—)
 	 */
 	public List findAllAccessoryList(String busId ,String typeId){
 		String sql = " select a.path, a.ext, a.sizes, a.remarks, a.id accessory_id, f.id fj_id, a.name, f.c_accessory_name as a_name"
@@ -258,9 +258,9 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 	
 	/**
-	 * ²éÕÒµ½È«²¿µÄ¸½¼şÁĞ±í 
-	 * @param busId ÒµÎñId
-	 * @return ¸½¼şpath,ÖĞ¼ä±íId£¬¸½¼şÃû
+	 * æŸ¥æ‰¾åˆ°å…¨éƒ¨çš„é™„ä»¶åˆ—è¡¨ 
+	 * @param busId ä¸šåŠ¡Id
+	 * @return é™„ä»¶path,ä¸­é—´è¡¨Idï¼Œé™„ä»¶å
 	 */
 	public List findAllAccessoryList(String busId){
 		String sql = " select a.path, a.ext, s.c_name a_name, a.name ca_name"
@@ -272,7 +272,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 	
 	/**
-	 * É¾³ı°ìÖ¤¼°°ìÖ¤Ïà¹ØµÄĞÅÏ¢
+	 * åˆ é™¤åŠè¯åŠåŠè¯ç›¸å…³çš„ä¿¡æ¯
 	 * @param map
 	 */
 	public void deleteCertificate(Rundata map, Certificate certificate, String fileRootPath) {
@@ -282,7 +282,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 			transaction.begin();
 			Object twoCer = null;
 			try {
-				// ÔÚÏß°ìÀíÇÒÓĞÒµÎñ±íµ¥É¾³ıÒµÎñ±íµ¥ÄÚÈİ
+				// åœ¨çº¿åŠç†ä¸”æœ‰ä¸šåŠ¡è¡¨å•åˆ é™¤ä¸šåŠ¡è¡¨å•å†…å®¹
 				if(certificate.getCredentialsType().getFlowType() == FLOWTYPE_ONLINE && certificate.getCredentialsType().getHasForm() == HAS_FORM_YES) {
 					CredentialsModule module = credentialsModuleService.findByIdAndAreaCode(certificate.getCredentialsType().getId(), certificate.getCredentialsType().getAreaCode());
 					@SuppressWarnings("unchecked")
@@ -303,7 +303,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 				if (StringUtils.hasText(certificate.getRightImage())) {
 					FileUtil.deleteFile(fileRootPath + certificate.getRightImage());
 				}
-				// É¾³ıÎÄÊé
+				// åˆ é™¤æ–‡ä¹¦
 				session.createQuery("Delete from Doc d where d.cerId=?").setString(0, certificate.getId()).executeUpdate();
 				String docPath = fileRootPath + "certificate/doc/" + certificate.getId();
 				String imagePath =  fileRootPath + "CerDecodeImage/" +  certificate.getId();
@@ -318,7 +318,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
    
 	/**
-	 * É¾³ıÖ¤¼ş¶ÔÓ¦µÄ¸½¼ş-Ó²ÅÌºÍÊı¾İ¿â
+	 * åˆ é™¤è¯ä»¶å¯¹åº”çš„é™„ä»¶-ç¡¬ç›˜å’Œæ•°æ®åº“
 	 * @param map
 	 */
 	private void deleteAttachByCer(Rundata map,Session session){
@@ -333,7 +333,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 			Object[] obj=(Object[])accessoryList.get(i);
 			String accessoryId=obj[4]==null?"-":obj[4].toString();
 			Accessory accessory = accessoryService.findById(map, accessoryId);
-			if(accessory != null&&StringUtils.hasText(accessory.getPath())&&!accessory.getPath().startsWith("license_library/")){//±ÜÃâÉ¾³ıÖ¤ÕÕ¿âÖĞµÄ¸½¼ş
+			if(accessory != null&&StringUtils.hasText(accessory.getPath())&&!accessory.getPath().startsWith("license_library/")){//é¿å…åˆ é™¤è¯ç…§åº“ä¸­çš„é™„ä»¶
 				accessoryService.deleteFromDisk(map, accessoryId);
 				accessoryService.deleteFromDb(accessoryId);
 			}
@@ -342,7 +342,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 	
 	/**
-	 * ±£´æ»º´æÖĞµÄ¸½¼şĞÅÏ¢µ½Êı¾İ¿â
+	 * ä¿å­˜ç¼“å­˜ä¸­çš„é™„ä»¶ä¿¡æ¯åˆ°æ•°æ®åº“
 	 * @param map
 	 * @param businessId
 	 * @return
@@ -368,14 +368,14 @@ public class CertificateService extends BaseService implements Constant, Constan
     }
     
     /**
-     * ±£´æ¸½¼şÖĞ¼ä±í
+     * ä¿å­˜é™„ä»¶ä¸­é—´è¡¨
      */
 	public void SaveCertificateFJ(CertificateFJ certificateFJ) {
 		excuteAdd(certificateFJ);
 	}
 	
     /**
-     * »ñÈ¡µ±Ç°ÓÃ»§Ëù°ìÀíµÄĞÂ½¨Ö¤¼şÊıÄ¿
+     * è·å–å½“å‰ç”¨æˆ·æ‰€åŠç†çš„æ–°å»ºè¯ä»¶æ•°ç›®
      * @param certificate
      * @return
      */
@@ -391,7 +391,7 @@ public class CertificateService extends BaseService implements Constant, Constan
     
     
     /**
-     * »ñÈ¡µ±Ç°ÓÃ»§Ëù°ìÀíµÄ´ú°ìÖ¤¼şÊıÄ¿
+     * è·å–å½“å‰ç”¨æˆ·æ‰€åŠç†çš„ä»£åŠè¯ä»¶æ•°ç›®
      * @param certificate
      * @return
      */
@@ -406,11 +406,11 @@ public class CertificateService extends BaseService implements Constant, Constan
 		    hql += " and c.operatorId ='" + certificate.getOperatorId() + "'";
 		}
 		int count1 = getCount(hql);
-    	return count1;			//·µ»Ø´ú°ìÖ¤¼şÊıÄ¿
+    	return count1;			//è¿”å›ä»£åŠè¯ä»¶æ•°ç›®
     }
     
     /**
-     * »ñÈ¡µ±Ç°ÓÃ»§Ëù°ìÀíµÄ°ì½áÖ¤¼şÊıÄ¿
+     * è·å–å½“å‰ç”¨æˆ·æ‰€åŠç†çš„åŠç»“è¯ä»¶æ•°ç›®
      * @param certificate
      * @return
      */
@@ -426,7 +426,7 @@ public class CertificateService extends BaseService implements Constant, Constan
     }
     
     /**
-     * ¸ù¾İ°ìÖ¤¶ş¼¶ÀàÀàÃûclassName ºÍÉêÇëÈËid »ñÈ¡ÉêÇëÈËËù°ìÀíµÄ´ËÖ¤¼şÊı¾İ
+     * æ ¹æ®åŠè¯äºŒçº§ç±»ç±»åclassName å’Œç”³è¯·äººid è·å–ç”³è¯·äººæ‰€åŠç†çš„æ­¤è¯ä»¶æ•°æ®
      * @param className
      * @param id
      * @return
@@ -443,7 +443,7 @@ public class CertificateService extends BaseService implements Constant, Constan
     }
 	    
     /**
-     * Í¨¹ıÖ¤¼şId»ñÈ¡Ö¤¼ş
+     * é€šè¿‡è¯ä»¶Idè·å–è¯ä»¶
      * @param id
      * @return
      */
@@ -459,10 +459,10 @@ public class CertificateService extends BaseService implements Constant, Constan
     }
     
     /**
-     * @Description: ÉèÖÃ°ìÖ¤ÊÜÀíµ¥ºÅ,Ö÷Òª¹æÔòÈçÏÂ:<br>
-     * °ìÖ¤ÊÜÀíµ¥ºÅÓÉÁ½²¿·Ö×é³É£¬·Ö±ğÊÇµ±Ìì14Î»ÊıÊ±¼äÊı×Ö´®ºÍ3Î»ÊıµÄµ±ÌìĞÂ½¨Êı¾İÍ³¼ÆÊıÁ¿´®;<br>
-     * ÀıÈç£º 2016Äê10ÔÂ12ÈÕ10Ê±58·Ö34Ãë´´½¨µÄµ±ÌìµÚÒ»Ìõ°ìÖ¤ÊÜÀíµ¥ºÅ¼´£º20161012105834001£¬ÒÔ´ËÀàÍÆ
-     * @author pyyou 2016Äê10ÔÂ12ÈÕ
+     * @Description: è®¾ç½®åŠè¯å—ç†å•å·,ä¸»è¦è§„åˆ™å¦‚ä¸‹:<br>
+     * åŠè¯å—ç†å•å·ç”±ä¸¤éƒ¨åˆ†ç»„æˆï¼Œåˆ†åˆ«æ˜¯å½“å¤©14ä½æ•°æ—¶é—´æ•°å­—ä¸²å’Œ3ä½æ•°çš„å½“å¤©æ–°å»ºæ•°æ®ç»Ÿè®¡æ•°é‡ä¸²;<br>
+     * ä¾‹å¦‚ï¼š 2016å¹´10æœˆ12æ—¥10æ—¶58åˆ†34ç§’åˆ›å»ºçš„å½“å¤©ç¬¬ä¸€æ¡åŠè¯å—ç†å•å·å³ï¼š20161012105834001ï¼Œä»¥æ­¤ç±»æ¨
+     * @author pyyou 2016å¹´10æœˆ12æ—¥
      * 
      * @param criteria
      */
@@ -471,19 +471,19 @@ public class CertificateService extends BaseService implements Constant, Constan
     	session.beginTransaction();
     	DateFormatUtil dateFormatUtil = DateFormatUtil.getInstance("yyyyMMddHHmmss");
     	String no = dateFormatUtil.toString(System.currentTimeMillis());
-    	// Í³¼Æµ±ÌìĞÂ½¨Êı¾İÖ¤¼şºÅ×îºóÈıÎ»ÊıÇÒ×Ô¶¯  + 1
+    	// ç»Ÿè®¡å½“å¤©æ–°å»ºæ•°æ®è¯ä»¶å·æœ€åä¸‰ä½æ•°ä¸”è‡ªåŠ¨  + 1
     	String sql = "select IFNULL(max(substr(t.certificate_no, 15,3)), 0)  + 1 from t_workbench_certificate t where "
     			+ " FROM_UNIXTIME(t.create_time/1000, '%Y-%m-%d')"
     			+ "= date_format(now(), '%Y-%m-%d')";
-    	Integer count = Double.valueOf(session.createSQLQuery(sql).uniqueResult().toString()).intValue();//ÅÅ³ı°üº¬Ğ¡ÊıµãµÄÓ°Ïì
-    	no += String.valueOf(count).length() < 3 ? String.format("%03d", Integer.valueOf(count)) : count;// ½ñÌìĞÂ½¨Í³¼Æ×î´óÊı£¨²»×ã3Î»Êı²¹0£©
+    	Integer count = Double.valueOf(session.createSQLQuery(sql).uniqueResult().toString()).intValue();//æ’é™¤åŒ…å«å°æ•°ç‚¹çš„å½±å“
+    	no += String.valueOf(count).length() < 3 ? String.format("%03d", Integer.valueOf(count)) : count;// ä»Šå¤©æ–°å»ºç»Ÿè®¡æœ€å¤§æ•°ï¼ˆä¸è¶³3ä½æ•°è¡¥0ï¼‰
     	criteria.setCertificate_no(no);
         session.save(criteria);
         session.getTransaction().commit();
     }
     
 	/**
-	 * Ñ¡ÖĞµÄÅúÁ¿ÉóÅú²éÑ¯
+	 * é€‰ä¸­çš„æ‰¹é‡å®¡æ‰¹æŸ¥è¯¢
 	 * 
 	 * @param criteria
 	 * @param flowsql
@@ -502,7 +502,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 		return (List<Certificate>)getListByHQL(hql);
 	}
 	/**
-	 * ÅúÁ¿ÉóÅú²éÑ¯
+	 * æ‰¹é‡å®¡æ‰¹æŸ¥è¯¢
 	 * 
 	 * @param criteria
 	 * @param flowsql
@@ -510,12 +510,12 @@ public class CertificateService extends BaseService implements Constant, Constan
 	 * @return
 	 */
 	public List<Certificate> batchbj_list(Certificate criteria, String flowsql, String userid,String applayItem) {
-		// ¸ù¾İ¹¤×÷Á÷ÕÒ³ö¿ÉÒÔ´¦ÀíµÄÁ÷³Ì
+		// æ ¹æ®å·¥ä½œæµæ‰¾å‡ºå¯ä»¥å¤„ç†çš„æµç¨‹
 		String hql = "select c.* from t_en_recovery_aid aid left join  (select certificate.* from t_workbench_certificate certificate,"
 				+ flowsql;
 		hql += " ) c on c.id = aid.c_id  where state != '" + Constant.CERTIFICATE_STATE_END + "' and state != '" + Constant.CERTIFICATE_STATE_SUBMITTED + "'";
 		if(StringUtils.hasText(applayItem)){
-			hql += " and aid.apply_item like '%,"+applayItem+",%'"; //°üÀ¨½ÖµÀ»ØÍËÖ¤¼ş×´Ì¬Îª c0
+			hql += " and aid.apply_item like '%,"+applayItem+",%'"; //åŒ…æ‹¬è¡—é“å›é€€è¯ä»¶çŠ¶æ€ä¸º c0
 		}
 		if (StringUtils.hasText(criteria.getUserName())) {
 			hql += " and c.user_name like '%" + criteria.getUserName() + "%'";
@@ -531,7 +531,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	}
 	
 	/**
-	 * ÅúÁ¿ÉóÅúlist²éÑ¯
+	 * æ‰¹é‡å®¡æ‰¹listæŸ¥è¯¢
 	 * 
 	 * @param criteria
 	 * @param flowsql
@@ -539,7 +539,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 	 * @return
 	 */
 	public List<Certificate> searchBatchApprovalList(Certificate criteria, String flowsql, String userid, String typeId) {
-		// ¸ù¾İ¹¤×÷Á÷ÕÒ³ö¿ÉÒÔ´¦ÀíµÄÁ÷³Ì
+		// æ ¹æ®å·¥ä½œæµæ‰¾å‡ºå¯ä»¥å¤„ç†çš„æµç¨‹
 		String hql = "select c.* from (select certificate.* from t_workbench_certificate certificate,"
 				+ flowsql;
 		hql += " ) c  where c.state != '" + Constant.CERTIFICATE_STATE_END + "' and state != '" + Constant.CERTIFICATE_STATE_SUBMITTED + "' ";
@@ -565,7 +565,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 		return getPageListBySql(hql, criteria, Certificate.class);
 	}
 	/**
-	 * »ñÈ¡Ç°¼¸Ìõ°ìÖ¤ÊÂÏî£¨ÉçÇø¼à¹ÜÒ³ÓÃ£©
+	 * è·å–å‰å‡ æ¡åŠè¯äº‹é¡¹ï¼ˆç¤¾åŒºç›‘ç®¡é¡µç”¨ï¼‰
 	 * 
 	 * @param areaCode
 	 * @return
@@ -579,7 +579,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 		return query.list();
 	}
 	/**
-	 * ĞŞ¸Ä¸½¼şÃû³Æ ÅĞ¶ÏÃû³ÆÊÇ·ñÖØ¸´
+	 * ä¿®æ”¹é™„ä»¶åç§° åˆ¤æ–­åç§°æ˜¯å¦é‡å¤
 	 * @param cerId
 	 * @param name
 	 * @return
@@ -589,7 +589,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 		return getCountSql(sql);
 	}
 	/**
-	 * Í¨¹ı¸½¼şÖĞ¼ä±í²éÕÒÖ¤ÖĞÖ¤id
+	 * é€šè¿‡é™„ä»¶ä¸­é—´è¡¨æŸ¥æ‰¾è¯ä¸­è¯id
 	 * @param cerId
 	 * @param typeId
 	 * @param subTypeId
@@ -607,7 +607,7 @@ public class CertificateService extends BaseService implements Constant, Constan
 		return null;
 	}
 	/**
-	 * É¾³ıÓëÖ¤ÖĞÖ¤Ïà¹ØµÄ¸½¼şÖĞ¼ä±í
+	 * åˆ é™¤ä¸è¯ä¸­è¯ç›¸å…³çš„é™„ä»¶ä¸­é—´è¡¨
 	 * @param cerId
 	 */
 	public void deleteCertificateFJByBusId(String cerId){
@@ -615,10 +615,10 @@ public class CertificateService extends BaseService implements Constant, Constan
 		excuteUpdate(hql);
 	}
 	/**
-	 * É¾³ıĞÅÏ¢ Í¬Ê±½«ĞÅÏ¢Ìí¼Óµ½t_sync
-	 * @param id É¾³ıµÄid
-	 * @param type ÀàĞÍ
-	 * @param areaCode ÇøÓò±àÂë
+	 * åˆ é™¤ä¿¡æ¯ åŒæ—¶å°†ä¿¡æ¯æ·»åŠ åˆ°t_sync
+	 * @param id åˆ é™¤çš„id
+	 * @param type ç±»å‹
+	 * @param areaCode åŒºåŸŸç¼–ç 
 	 */
 	public void addSyncData(String id,String type,String areaCode){
 		String sql = "insert into t_sync_delete_data (id,c_type,c_area_code) values( '"+id+"', '"+type+"', '"+areaCode+"')";
